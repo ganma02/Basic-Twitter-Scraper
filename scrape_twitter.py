@@ -23,21 +23,18 @@ class TwitterUser():
           
           # Finding the index of 'a' that has the name
           for a,b in enumerate(a_search):
-                if a_search[a].get('href') == '/'+self.username:
-                      name = a_search[a].getText()
-                      name = name.strip()
-                      break
-          return name
+                if a_search[a].get('href') == '/' + self.username:
+                    return a_search[a].getText().strip()
       
       # Getting twitter bio by using username
       def get_twitter_bio(self):
           res = requests.get('https://twitter.com/{}'.format(self.username))
           #res.raise_for_status()
-      
+          
+          # Finding the bio using HTML 'p' 
           twitterSoup = bs4.BeautifulSoup(res.text, 'lxml')
           p_search = twitterSoup.select('p')
-          bio = p_search[0].getText()
-          return bio
+          return p_search[0].getText()
       
       
       # Getting amount of followers in twitter by using username
@@ -50,14 +47,11 @@ class TwitterUser():
           
           # Finding the index of 'span' that has the followers count
           for a,b in enumerate(span_search):
-                if span_search[a].getText() == 'Pengikut': #'Pengikut' in Malay means 'Follower'. This is because my ISP used Malay language.
-                      follower = span_search[a + 2].getText()
-                      break
-          
-          return follower
+                if span_search[a].getText() == 'Follower':
+                      return str(span_search[a + 2].getText())
 
-if __name__ == '__main__':
-    #user = TwitterUser('testuser')
-    #print('My name is ' + user.get_twitter_name())
-    #print(user.get_twitter_bio())
-    #print('I have ' + user.get_twitter_follower() + ' followers.')
+#if __name__ == '__main__':
+    # user = TwitterUser('testuser')
+    # print('My name is ' + user.get_twitter_name())
+    # print(user.get_twitter_bio())
+    # print('I have ' + user.get_twitter_follower() + ' followers.')
